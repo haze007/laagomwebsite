@@ -141,7 +141,9 @@ function ServiceCard({
   );
 }
 
-function ProcessCard({
+const stepColors = ["#19555c", "#2e7d72", "#4fa889"];
+
+function TimelineEntry({
   title,
   body,
   index,
@@ -155,17 +157,24 @@ function ProcessCard({
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-60px" });
   return (
-    <motion.article
-      className="process-card"
+    <motion.div
+      className="timeline-entry"
       ref={ref}
-      initial={{ opacity: 0, y: 22 }}
+      initial={{ opacity: 0, y: 24 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.55, delay, ease: [0.22, 1, 0.36, 1] }}
     >
-      <span>{String(index + 1).padStart(2, "0")}</span>
+      <div
+        className="timeline-dot"
+        style={{ background: stepColors[index] }}
+        aria-hidden="true"
+      />
+      <span className="timeline-num">{String(index + 1).padStart(2, "0")}</span>
       <h3>{title}</h3>
-      <p>{body}</p>
-    </motion.article>
+      <div className="timeline-card">
+        <p>{body}</p>
+      </div>
+    </motion.div>
   );
 }
 
@@ -368,9 +377,9 @@ function App() {
         <FadeIn className="section-heading">
           <h2>A structured approach. No surprises.</h2>
         </FadeIn>
-        <div className="process-grid">
+        <div className="process-timeline">
           {processSteps.map((step, i) => (
-            <ProcessCard key={step.title} {...step} index={i} delay={i * 0.1} />
+            <TimelineEntry key={step.title} {...step} index={i} delay={i * 0.12} />
           ))}
         </div>
       </section>

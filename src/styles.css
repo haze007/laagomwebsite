@@ -66,8 +66,7 @@
   letter-spacing: -0.02em;
 }
 
-[data-theme="vail"] .service-card h3,
-[data-theme="vail"] .process-card h3 {
+[data-theme="vail"] .service-card h3 {
   font-size: 19px;
   font-weight: 600;
   letter-spacing: -0.01em;
@@ -93,11 +92,6 @@
   border-radius: 32px;
 }
 
-/* Vail process cards — top rule instead of box */
-[data-theme="vail"] .process-card {
-  border-top: 2px solid rgba(20, 38, 61, 0.12);
-  padding-top: 32px;
-}
 
 /* ═══════════════════════════════════════════════════════════════════════════════
    MIST THEME
@@ -144,15 +138,13 @@
   letter-spacing: -0.02em;
 }
 
-[data-theme="mist"] .service-card h3,
-[data-theme="mist"] .process-card h3 {
+[data-theme="mist"] .service-card h3 {
   font-size: 16px;
   font-weight: 600;
   letter-spacing: 0;
 }
 
 [data-theme="mist"] .service-card p,
-[data-theme="mist"] .process-card p,
 [data-theme="mist"] .values-copy p {
   font-size: 14px;
   line-height: 1.6;
@@ -184,11 +176,6 @@
   border-radius: 6px;
 }
 
-/* Mist process cards — horizontal rule separator */
-[data-theme="mist"] .process-card {
-  border-top: 1px solid var(--line);
-  padding-top: 28px;
-}
 
 [data-theme="mist"] .tech-strip {
   background: #111827;
@@ -530,8 +517,7 @@ main { overflow: hidden; }
   object-fit: cover;
 }
 
-.service-card h3,
-.process-card h3 {
+.service-card h3 {
   margin: 18px 0 8px;
   color: var(--ink);
   font-size: 18px;
@@ -604,29 +590,88 @@ main { overflow: hidden; }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════════
-   PROCESS — no boxes, numbered list with top rule
+   PROCESS — vertical timeline
+   Layout math:
+     padding-left: 44px  →  entry content starts at 44px
+     line at x: 14px from container
+     dot (14×14): left = -(44-14+7) = -37px → center at 14px ✓
+     line on entry: left = 14-44 = -30px  →  center ≈ 14px ✓
    ═══════════════════════════════════════════════════════════════════════════════ */
-.process-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0 32px;
+.process-timeline {
+  position: relative;
+  max-width: 660px;
+  padding-left: 44px;
 }
 
-/* Top rule replaces the box — clean editorial separator */
-.process-card {
-  padding: 30px 0 0;
-  border-top: 1px solid var(--line);
-  transition: border-color 0.2s;
+.timeline-entry {
+  position: relative;
+  padding-bottom: 48px;
 }
 
-.process-card span {
+.timeline-entry:last-child {
+  padding-bottom: 0;
+}
+
+/* Connecting line between dots */
+.timeline-entry:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: -30px;
+  top: 20px;   /* start right below dot (6 + 14) */
+  bottom: 0;
+  width: 1px;
+  background: var(--line);
+}
+
+/* Colored dot */
+.timeline-dot {
+  position: absolute;
+  left: -37px;
+  top: 6px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  outline: 3px solid var(--bg);
+  outline-offset: 1px;
+}
+
+.timeline-num {
+  display: block;
+  margin-bottom: 6px;
   color: #9aa4ad;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
 }
 
-.process-card h3 { margin: 32px 0 12px; }
+.timeline-entry h3 {
+  margin: 0 0 16px;
+  color: var(--ink);
+  font-size: clamp(18px, 1.6vw, 22px);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.timeline-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: #ffffff;
+  padding: 20px 24px;
+  box-shadow: var(--shadow-sm);
+  transition: border-radius 0.3s ease, box-shadow 0.2s ease;
+}
+
+.timeline-card:hover {
+  box-shadow: var(--shadow);
+}
+
+.timeline-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.7;
+}
 
 /* ═══════════════════════════════════════════════════════════════════════════════
    VALUES — Tailark features layout: featured wide + two side cards
@@ -813,7 +858,6 @@ main { overflow: hidden; }
   .service-card:nth-child(1) { grid-column: span 2; }
   .service-card:nth-child(2) { grid-column: span 2; }
   .service-card:nth-child(n+3) .service-image { height: clamp(140px, 28vw, 240px); }
-  .process-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
   .calendly-container { min-height: 650px; }
 }
@@ -840,7 +884,10 @@ main { overflow: hidden; }
   .service-card:nth-child(1) .service-image,
   .service-card:nth-child(2) .service-image,
   .service-card:nth-child(n+3) .service-image { height: clamp(180px, 52vw, 320px); }
-  .process-grid { grid-template-columns: 1fr; }
+
+  .process-timeline { padding-left: 36px; }
+  .timeline-dot { left: -29px; }
+  .timeline-entry:not(:last-child)::after { left: -23px; }
 
   .brief-media,
   .cta-panel { min-height: 280px; }
