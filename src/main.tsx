@@ -27,26 +27,31 @@ const services = [
     title: "Workflow Automation",
     body: "We map how your team works today and rebuild it so the right things happen automatically.",
     image: assets.workflow,
+    bgColor: "#ede8df",
   },
   {
     title: "AI & Intelligent Agents",
     body: "We deploy AI tools that work inside your existing operations — not as experiments, but as working systems.",
     image: assets.ai,
+    bgColor: "#dce8f4",
   },
   {
     title: "Custom Internal Tools",
     body: "We build the dashboards, portals, and internal apps your team will actually use.",
     image: assets.tools,
+    bgColor: "#daeee5",
   },
   {
     title: "Systems Integration",
     body: "We connect the tools you already have so data flows cleanly without manual intervention.",
     image: assets.integration,
+    bgColor: "#ece3ee",
   },
   {
     title: "Advisory & Training",
     body: "We help your leadership team understand what's possible and build the internal capability to sustain it.",
     image: assets.training,
+    bgColor: "#f0e8dc",
   },
 ];
 
@@ -115,11 +120,13 @@ function ServiceCard({
   title,
   body,
   image,
+  bgColor,
   delay,
 }: {
   title: string;
   body: string;
   image: string;
+  bgColor: string;
   delay: number;
 }) {
   const ref = useRef(null);
@@ -132,11 +139,13 @@ function ServiceCard({
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] }}
     >
-      <div className="service-image">
+      <div className="service-image-wrap" style={{ background: bgColor }}>
         <img src={image} alt={title} />
       </div>
-      <h3>{title}</h3>
-      <p>{body}</p>
+      <div className="service-body">
+        <h3>{title}</h3>
+        <p>{body}</p>
+      </div>
     </motion.article>
   );
 }
@@ -374,13 +383,15 @@ function App() {
 
       {/* ── Process ── */}
       <section className="process section">
-        <FadeIn className="section-heading">
-          <h2>A structured approach. No surprises.</h2>
-        </FadeIn>
-        <div className="process-timeline">
-          {processSteps.map((step, i) => (
-            <TimelineEntry key={step.title} {...step} index={i} delay={i * 0.12} />
-          ))}
+        <div className="process-layout">
+          <FadeIn className="process-col-heading">
+            <h2>A structured approach. No surprises.</h2>
+          </FadeIn>
+          <div className="process-timeline">
+            {processSteps.map((step, i) => (
+              <TimelineEntry key={step.title} {...step} index={i} delay={i * 0.12} />
+            ))}
+          </div>
         </div>
       </section>
 
