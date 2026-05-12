@@ -1,11 +1,16 @@
-@import url("https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap");
+@import "@fontsource/geist/300.css";
+@import "@fontsource/geist/400.css";
+@import "@fontsource/geist/500.css";
+@import "@fontsource/geist/600.css";
+@import "@fontsource/geist/700.css";
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap");
 
 /* ═══════════════════════════════════════════════════════════════════════════════
    CSS VARIABLES — default (current palette, polished)
    ═══════════════════════════════════════════════════════════════════════════════ */
 :root {
   color: #14263d;
-  font-family: "Instrument Sans", "Inter", system-ui, sans-serif;
+  font-family: "Geist", "Inter", system-ui, sans-serif;
   font-synthesis: none;
   text-rendering: geometricPrecision;
 
@@ -370,7 +375,7 @@ main { overflow: hidden; }
   overflow: hidden;
   border-radius: clamp(14px, 1.5vw, 24px);
   box-shadow: var(--shadow);
-  cursor: pointer;
+  cursor: none; /* custom cursor takes over */
   transition: border-radius 0.3s ease;
 }
 
@@ -382,6 +387,51 @@ main { overflow: hidden; }
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+/* ── Custom pulsating cursor over hero ────────────────────────────────────── */
+.hero-cursor {
+  position: absolute;
+  z-index: 10;
+  pointer-events: none;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1.5px solid rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  animation: hero-cursor-pulse 1.8s ease-in-out infinite;
+}
+
+/* Revert state (on alt image) — warm amber ring */
+.hero-cursor--alt {
+  background: rgba(255, 195, 80, 0.15);
+  border-color: rgba(255, 195, 80, 0.75);
+  animation: hero-cursor-pulse-alt 1.8s ease-in-out infinite;
+}
+
+.hero-cursor-icon {
+  color: rgba(255, 255, 255, 0.9);
+  display: block;
+}
+
+.hero-cursor--alt .hero-cursor-icon {
+  color: rgba(255, 195, 80, 0.95);
+}
+
+@keyframes hero-cursor-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.28); }
+  50%       { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
+}
+
+@keyframes hero-cursor-pulse-alt {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 195, 80, 0.3); }
+  50%       { box-shadow: 0 0 0 10px rgba(255, 195, 80, 0); }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════════
@@ -494,25 +544,25 @@ main { overflow: hidden; }
   grid-column: span 2;
 }
 
-/* Bento cell — proper styled card */
+/* Bento cell — tinted card, no separate white body */
 .service-card {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border: 1px solid var(--line);
+  border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: var(--radius-card);
-  background: var(--bg);
-  box-shadow: var(--shadow-sm);
+  /* background comes from inline style (bgColor) */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 4px 14px rgba(0, 0, 0, 0.04);
   padding: 0;
-  transition: box-shadow 0.25s ease, transform 0.25s ease, border-radius 0.3s ease;
+  transition: box-shadow 0.3s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), border-radius 0.3s ease;
 }
 
 .service-card:hover {
-  box-shadow: var(--shadow);
-  transform: translateY(-2px);
+  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.1), 0 1px 4px rgba(0, 0, 0, 0.06);
+  transform: translateY(-4px);
 }
 
-/* Image area — tinted background set inline, image contained within */
+/* Image area — no background (inherited from card) */
 .service-image-wrap {
   flex: 1;
   overflow: hidden;
@@ -521,24 +571,30 @@ main { overflow: hidden; }
   justify-content: center;
 }
 
-/* Row 2 cards: fixed image height, no flex-grow */
+/* Row 2: fixed image height */
 .service-card:nth-child(n+3) .service-image-wrap {
   flex: none;
   height: clamp(150px, 18vw, 240px);
 }
 
+/* Image scales up on card hover */
 .service-image-wrap img {
   object-fit: contain;
   width: 100%;
   height: 100%;
-  padding: clamp(12px, 2vw, 24px);
+  padding: clamp(12px, 2vw, 28px);
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Text area below image */
+.service-card:hover .service-image-wrap img {
+  transform: scale(1.09) translateY(-3px);
+}
+
+/* Text area — integrates with tinted card bg, soft white gradient at bottom */
 .service-body {
   padding: 18px 20px 22px;
-  border-top: 1px solid var(--line);
   flex-shrink: 0;
+  background: linear-gradient(to bottom, transparent 0%, rgba(255, 255, 255, 0.28) 100%);
 }
 
 .service-body h3 {
@@ -552,7 +608,7 @@ main { overflow: hidden; }
 
 .service-body p {
   margin: 0;
-  color: var(--muted);
+  color: rgba(20, 38, 61, 0.65);
   font-size: 13px;
   line-height: 1.6;
 }

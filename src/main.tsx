@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom/client";
 import { Icon } from "@iconify/react";
 import { motion, useInView, AnimatePresence } from "motion/react";
@@ -8,7 +8,7 @@ import "./styles.css";
 
 const assets = {
   hero: "/assets/laagom-04.png",
-  heroAlt: "/assets/laagom-15.jpg",
+  heroAlt: "https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/variants/3ebfdace-9738-4483-b3bb-4e1ec7ba0145/3840w.jpg",
   brief: "/assets/laagom-05.webp",
   workflow: "/assets/laagom-06.png",
   ai: "/assets/laagom-07.png",
@@ -136,11 +136,12 @@ function ServiceCard({
     <motion.article
       className="service-card"
       ref={ref}
+      style={{ background: bgColor }}
       initial={{ opacity: 0, y: 22 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] }}
     >
-      <div className="service-image-wrap" style={{ background: bgColor }}>
+      <div className="service-image-wrap">
         <img src={image} alt={title} />
       </div>
       <div className="service-body">
@@ -249,18 +250,57 @@ function ValuesFeature() {
   );
 }
 
-// ── Hero image (easter egg: click to swap) ───────────────────────────────────
+// ── Hero image (easter egg: click to swap, custom pulsating cursor) ──────────
 
 function HeroImage() {
   const [alt, setAlt] = useState(false);
+  const [cursor, setCursor] = useState({ x: 0, y: 0, active: false });
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setCursor({ x: e.clientX - rect.left, y: e.clientY - rect.top, active: true });
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    setCursor((c) => ({ ...c, active: false }));
+  }, []);
+
   return (
     <motion.div
       className="hero-media"
       onClick={() => setAlt((v) => !v)}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       initial={{ opacity: 0, y: 20, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
     >
+      {/* Pulsating custom cursor */}
+      <AnimatePresence>
+        {cursor.active && (
+          <motion.div
+            className={`hero-cursor${alt ? " hero-cursor--alt" : ""}`}
+            style={{ left: cursor.x, top: cursor.y }}
+            initial={{ opacity: 0, scale: 0.3 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.3 }}
+            transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <Icon
+              icon={
+                alt
+                  ? "solar:arrow-left-bold-duotone"
+                  : "solar:magic-stick-3-bold-duotone"
+              }
+              className="hero-cursor-icon"
+              width={15}
+              height={15}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Images crossfade */}
       <AnimatePresence mode="sync" initial={false}>
         <motion.img
           key={alt ? "alt" : "main"}
