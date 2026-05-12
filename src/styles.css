@@ -364,12 +364,24 @@ main { overflow: hidden; }
 }
 
 .hero-media {
+  position: relative;
   width: min(1200px, calc(100vw - 48px));
   height: clamp(300px, 42vw, 560px);
   overflow: hidden;
   border-radius: clamp(14px, 1.5vw, 24px);
   box-shadow: var(--shadow);
+  cursor: pointer;
   transition: border-radius 0.3s ease;
+}
+
+/* Stacked images for crossfade — both absolute so they overlap cleanly */
+.hero-img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════════

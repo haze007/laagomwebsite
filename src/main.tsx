@@ -1,13 +1,14 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom/client";
 import { Icon } from "@iconify/react";
-import { motion, useInView } from "motion/react";
+import { motion, useInView, AnimatePresence } from "motion/react";
 import "./styles.css";
 
 // ── Assets ────────────────────────────────────────────────────────────────────
 
 const assets = {
   hero: "/assets/laagom-04.png",
+  heroAlt: "/assets/laagom-15.jpg",
   brief: "/assets/laagom-05.webp",
   workflow: "/assets/laagom-06.png",
   ai: "/assets/laagom-07.png",
@@ -248,6 +249,34 @@ function ValuesFeature() {
   );
 }
 
+// ── Hero image (easter egg: click to swap) ───────────────────────────────────
+
+function HeroImage() {
+  const [alt, setAlt] = useState(false);
+  return (
+    <motion.div
+      className="hero-media"
+      onClick={() => setAlt((v) => !v)}
+      initial={{ opacity: 0, y: 20, scale: 0.98 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <AnimatePresence mode="sync" initial={false}>
+        <motion.img
+          key={alt ? "alt" : "main"}
+          className="hero-img"
+          src={alt ? assets.heroAlt : assets.hero}
+          alt=""
+          initial={{ opacity: 0, scale: 1.04, filter: "blur(6px)" }}
+          animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+          exit={{ opacity: 0, scale: 0.97, filter: "blur(4px)" }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        />
+      </AnimatePresence>
+    </motion.div>
+  );
+}
+
 // ── Calendly embed ────────────────────────────────────────────────────────────
 
 function CalendlyWidget() {
@@ -341,14 +370,7 @@ function App() {
             <span>It's free!</span>
           </div>
         </motion.div>
-        <motion.div
-          className="hero-media"
-          initial={{ opacity: 0, y: 20, scale: 0.98 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <img src={assets.hero} alt="" />
-        </motion.div>
+        <HeroImage />
       </section>
 
       {/* ── Brief ── */}
