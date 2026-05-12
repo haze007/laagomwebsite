@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import ReactDOM from "react-dom/client";
-import { Menu } from "lucide-react";
+import { Icon } from "@iconify/react";
 import { motion, useInView } from "motion/react";
 import "./styles.css";
 
@@ -83,10 +83,6 @@ const values = [
   },
 ];
 
-// ── Theme ─────────────────────────────────────────────────────────────────────
-
-type Theme = "default" | "vail" | "mist";
-
 // ── Animation wrapper ─────────────────────────────────────────────────────────
 
 function FadeIn({
@@ -113,7 +109,7 @@ function FadeIn({
   );
 }
 
-// ── Per-card components (each needs its own useInView ref) ────────────────────
+// ── Per-card components ───────────────────────────────────────────────────────
 
 function ServiceCard({
   title,
@@ -173,35 +169,64 @@ function ProcessCard({
   );
 }
 
-function ValueRow({
-  title,
-  body,
-  image,
-  reverse,
-}: {
-  title: string;
-  body: string;
-  image: string;
-  reverse: boolean;
-}) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
+function ValuesFeature() {
+  const ref0 = useRef(null);
+  const ref1 = useRef(null);
+  const ref2 = useRef(null);
+  const inView0 = useInView(ref0, { once: true, margin: "-60px" });
+  const inView1 = useInView(ref1, { once: true, margin: "-60px" });
+  const inView2 = useInView(ref2, { once: true, margin: "-60px" });
+
   return (
-    <motion.article
-      className={`value-row${reverse ? " reverse" : ""}`}
-      ref={ref}
-      initial={{ opacity: 0, y: 28 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-    >
-      <div className="value-image">
-        <img src={image} alt="" />
-      </div>
-      <div className="value-copy">
-        <h3>{title}</h3>
-        <p>{body}</p>
-      </div>
-    </motion.article>
+    <div className="values-grid">
+      <motion.article
+        className="values-item values-item--featured"
+        ref={ref0}
+        initial={{ opacity: 0, y: 28 }}
+        animate={inView0 ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <div className="values-img">
+          <img src={values[0].image} alt="" />
+        </div>
+        <div className="values-copy">
+          <h3>{values[0].title}</h3>
+          <p>{values[0].body}</p>
+        </div>
+      </motion.article>
+
+      <motion.article
+        className="values-item values-item--side"
+        ref={ref1}
+        initial={{ opacity: 0, y: 28 }}
+        animate={inView1 ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.6, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <div className="values-img">
+          <img src={values[1].image} alt="" />
+        </div>
+        <div className="values-copy">
+          <h3>{values[1].title}</h3>
+          <p>{values[1].body}</p>
+        </div>
+      </motion.article>
+
+      <motion.article
+        className="values-item values-item--side"
+        ref={ref2}
+        initial={{ opacity: 0, y: 28 }}
+        animate={inView2 ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.6, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <div className="values-img">
+          <img src={values[2].image} alt="" />
+        </div>
+        <div className="values-copy">
+          <h3>{values[2].title}</h3>
+          <p>{values[2].body}</p>
+        </div>
+      </motion.article>
+    </div>
   );
 }
 
@@ -240,46 +265,9 @@ function Logo() {
   );
 }
 
-// ── Theme switcher ────────────────────────────────────────────────────────────
-
-const themeLabels: Record<Theme, string> = {
-  default: "Current",
-  vail: "Vail",
-  mist: "Mist",
-};
-
-function ThemeSwitcher({
-  theme,
-  setTheme,
-}: {
-  theme: Theme;
-  setTheme: (t: Theme) => void;
-}) {
-  return (
-    <div className="theme-switcher" role="group" aria-label="Preview theme">
-      <span className="theme-label">Theme</span>
-      {(["default", "vail", "mist"] as Theme[]).map((t) => (
-        <button
-          key={t}
-          className={`theme-btn${theme === t ? " active" : ""}`}
-          onClick={() => setTheme(t)}
-        >
-          {themeLabels[t]}
-        </button>
-      ))}
-    </div>
-  );
-}
-
 // ── App ───────────────────────────────────────────────────────────────────────
 
 function App() {
-  const [theme, setTheme] = useState<Theme>("default");
-
-  useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-  }, [theme]);
-
   return (
     <main>
       {/* ── Navigation ── */}
@@ -289,15 +277,25 @@ function App() {
           <span>Laagom</span>
         </a>
         <div className="nav-links">
-          <a href="#brief">Brief</a>
-          <a href="#services">Services</a>
-          <a href="#values">Values</a>
+          <a href="#brief">
+            <Icon icon="solar:document-text-bold-duotone" className="nav-icon" />
+            Brief
+          </a>
+          <a href="#services">
+            <Icon icon="solar:layers-minimalistic-bold-duotone" className="nav-icon" />
+            Services
+          </a>
+          <a href="#values">
+            <Icon icon="solar:heart-bold-duotone" className="nav-icon" />
+            Values
+          </a>
         </div>
         <a className="portal" href="https://laagom.com/portal" rel="noreferrer">
+          <Icon icon="solar:widget-bold-duotone" className="nav-icon" />
           Clients Portal
         </a>
         <button className="menu-button" aria-label="Open menu">
-          <Menu size={22} />
+          <Icon icon="solar:hamburger-menu-bold-duotone" width={22} height={22} />
         </button>
       </nav>
 
@@ -311,7 +309,7 @@ function App() {
         >
           <h1>
             Enterprise Excellence.
-            <span>AI-Accelerated Efficiency.</span>
+            <em>AI-Accelerated Efficiency.</em>
           </h1>
           <p>
             We help established businesses build the internal systems, AI tools, and automated
@@ -319,6 +317,7 @@ function App() {
           </p>
           <div className="hero-actions">
             <a className="primary-button" href="#contact">
+              <Icon icon="solar:chat-round-dots-bold-duotone" className="btn-icon" />
               Let's Talk
             </a>
             <span>It's free!</span>
@@ -378,9 +377,10 @@ function App() {
 
       {/* ── Values ── */}
       <section className="values section" id="values">
-        {values.map((v, i) => (
-          <ValueRow key={v.title} {...v} reverse={i % 2 === 1} />
-        ))}
+        <FadeIn className="section-heading">
+          <h2>How we're different.</h2>
+        </FadeIn>
+        <ValuesFeature />
       </section>
 
       {/* ── Contact ── */}
@@ -411,9 +411,6 @@ function App() {
           hello@laagom.com
         </a>
       </footer>
-
-      {/* ── Theme switcher ── */}
-      <ThemeSwitcher theme={theme} setTheme={setTheme} />
     </main>
   );
 }
