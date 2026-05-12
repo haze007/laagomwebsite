@@ -3,6 +3,8 @@
 @import "@fontsource/geist/500.css";
 @import "@fontsource/geist/600.css";
 @import "@fontsource/geist/700.css";
+/* Fraunces — Tailark Vail display serif (variable: weight + optical-size axes) */
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap");
 
 /* ═══════════════════════════════════════════════════════════════════════════════
@@ -45,17 +47,19 @@
   --radius-sm:   12px;
 }
 
-/* Vail typography — editorial, generous, slightly warm */
+/* Vail typography — editorial display serif */
 [data-theme="vail"] .hero h1 {
   font-size: clamp(34px, 4.5vw, 64px);
-  font-weight: 600;
-  letter-spacing: -0.025em;
-  line-height: 1.0;
+  font-weight: 500;
+  font-variation-settings: "opsz" 144;
+  letter-spacing: -0.012em;
+  line-height: 0.98;
 }
 
 [data-theme="vail"] .hero h1 em {
   font-weight: 300;
-  letter-spacing: -0.02em;
+  font-variation-settings: "opsz" 144;
+  letter-spacing: -0.008em;
 }
 
 [data-theme="vail"] .hero p {
@@ -66,9 +70,14 @@
 
 [data-theme="vail"] .section-heading h2,
 [data-theme="vail"] .process-col-heading h2,
-[data-theme="vail"] .cta-panel h2,
+[data-theme="vail"] .cta-panel h2 {
+  font-size: clamp(20px, 2vw, 32px);
+  font-variation-settings: "opsz" 36;
+  letter-spacing: -0.01em;
+}
+
 [data-theme="vail"] .values-copy h3 {
-  letter-spacing: -0.022em;
+  letter-spacing: -0.01em;
 }
 
 [data-theme="vail"] .service-body h3 {
@@ -302,19 +311,22 @@ main { overflow: hidden; }
 .hero h1 {
   margin: 0;
   color: var(--ink);
+  font-family: "Fraunces", serif;
   font-size: clamp(28px, 3.6vw, 52px);
-  font-weight: 600;
-  line-height: 0.97;
-  letter-spacing: -0.02em;
-  transition: font-size 0.2s, letter-spacing 0.2s;
+  font-weight: 500;
+  font-variation-settings: "opsz" 72;
+  line-height: 1.0;
+  letter-spacing: -0.01em;
+  transition: font-size 0.2s;
 }
 
 .hero h1 em {
   display: block;
   font-style: italic;
-  font-weight: 400;
+  font-weight: 300;
+  font-variation-settings: "opsz" 72;
   color: var(--green);
-  letter-spacing: -0.015em;
+  letter-spacing: -0.008em;
 }
 
 @media (min-width: 981px) {
@@ -470,15 +482,18 @@ main { overflow: hidden; }
 .cta-panel h2 {
   margin: 0;
   color: var(--ink);
+  font-family: "Fraunces", serif;
   font-size: clamp(20px, 2vw, 30px);
-  font-weight: 600;
+  font-weight: 500;
+  font-variation-settings: "opsz" 36;
   line-height: 1.2;
-  letter-spacing: -0.018em;
+  letter-spacing: -0.01em;
 }
 
-/* Vail allows slightly more generous size for top editorial sections */
+/* Vail brief section — slightly more generous, matching the editorial register */
 [data-theme="vail"] .brief-copy h2 {
   font-size: clamp(22px, 2.4vw, 36px);
+  font-variation-settings: "opsz" 48;
   line-height: 1.15;
 }
 
