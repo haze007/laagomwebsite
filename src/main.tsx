@@ -189,63 +189,46 @@ function TimelineEntry({
   );
 }
 
-function ValuesFeature() {
-  const ref0 = useRef(null);
-  const ref1 = useRef(null);
-  const ref2 = useRef(null);
-  const inView0 = useInView(ref0, { once: true, margin: "-60px" });
-  const inView1 = useInView(ref1, { once: true, margin: "-60px" });
-  const inView2 = useInView(ref2, { once: true, margin: "-60px" });
+function ValuesRow({
+  title,
+  body,
+  image,
+  index,
+}: {
+  title: string;
+  body: string;
+  image: string;
+  index: number;
+}) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-60px" });
+  const isReverse = index % 2 === 1;
 
   return (
-    <div className="values-grid">
-      <motion.article
-        className="values-item values-item--featured"
-        ref={ref0}
-        initial={{ opacity: 0, y: 28 }}
-        animate={inView0 ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      >
-        <div className="values-img">
-          <img src={values[0].image} alt="" />
-        </div>
-        <div className="values-copy">
-          <h3>{values[0].title}</h3>
-          <p>{values[0].body}</p>
-        </div>
-      </motion.article>
+    <motion.article
+      ref={ref}
+      className={`values-row${isReverse ? " values-row--reverse" : ""}`}
+      initial={{ opacity: 0, y: 28 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <div className="values-row-img">
+        <img src={image} alt="" />
+      </div>
+      <div className="values-row-copy">
+        <h3>{title}</h3>
+        <p>{body}</p>
+      </div>
+    </motion.article>
+  );
+}
 
-      <motion.article
-        className="values-item values-item--side"
-        ref={ref1}
-        initial={{ opacity: 0, y: 28 }}
-        animate={inView1 ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.6, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
-      >
-        <div className="values-img">
-          <img src={values[1].image} alt="" />
-        </div>
-        <div className="values-copy">
-          <h3>{values[1].title}</h3>
-          <p>{values[1].body}</p>
-        </div>
-      </motion.article>
-
-      <motion.article
-        className="values-item values-item--side"
-        ref={ref2}
-        initial={{ opacity: 0, y: 28 }}
-        animate={inView2 ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.6, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
-      >
-        <div className="values-img">
-          <img src={values[2].image} alt="" />
-        </div>
-        <div className="values-copy">
-          <h3>{values[2].title}</h3>
-          <p>{values[2].body}</p>
-        </div>
-      </motion.article>
+function ValuesFeature() {
+  return (
+    <div className="values-list">
+      {values.map((v, i) => (
+        <ValuesRow key={v.title} {...v} index={i} />
+      ))}
     </div>
   );
 }
@@ -355,10 +338,18 @@ function Logo() {
 // ── App ───────────────────────────────────────────────────────────────────────
 
 function App() {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <main>
       {/* ── Navigation ── */}
-      <nav className="nav" aria-label="Primary navigation">
+      <nav className={`nav${scrolled ? " nav--scrolled" : ""}`} aria-label="Primary navigation">
         <a className="brand" href="#hero" aria-label="Laagom home">
           <Logo />
           <span>Laagom</span>
